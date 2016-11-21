@@ -2,11 +2,37 @@
 <title>Enroll Employee
 	</title>
 <head>
+	<style>
+	.error {color: #FF0000;}
+	</style>
 	<h2>Fillup to add employee</h2>
 <head/>
 <body>
-	<form action="" method="POST" name="fillupform">
-		Full Name : <input type ="text" name="fname" palceholder="first name and last name"><br><br>
+	<?php
+	$nameErr = $genderErr = $contactErr = $addressErr = "";
+	$name = $gender = $contact = $address= "";
+	if ($_SERVER["REQUIRED_METHOD"] == "POST"){
+	if (empty($_POST["name"])) {
+		$nameErr = "Name is required";
+
+	}
+	else{
+		$name = test_input($_POST["name"]);
+	}
+		if (!preg_match("/^[a-zA-Z ]*$/",$name)){
+			$nameErr = "Only letter and white space is allowed";
+	}
+	function test_input($data) {
+		$data = trim($data);
+		$data = stripslashes($data);
+		$data = htmlspecialchars($data);
+		return $data;
+	}
+	?>
+	<form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post" name="fillupform">
+		Full Name : <input type ="text" name="fname" palceholder="first name and last name" value="<?php echo $name;?>">
+		<span class="error">* <?php echo $nameErr;?></span>
+		<br><br>
 		Gender : <br><input type="radio" name="gender" value="male">Male<br>
 				<input type="radio" name="gender" value="female">Female<br>
 				<input type="radio" name="gender" value="others">Others<br>
@@ -122,7 +148,12 @@
 	<br>
 <input type="submit" name="submit" value="Add Employee">
 
+</form>
 
-	</form>
+	<?php
+	echo "<h2>Your input:</h2>";
+	echo $name;
+	?>
+	
 	</body>
 </html>
